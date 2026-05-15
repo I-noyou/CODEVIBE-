@@ -1188,3 +1188,21 @@ font-weight:600;
   position: relative;
   overflow: hidden;
 }
+
+/* LOADING SPINNER CSS */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
