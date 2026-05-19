@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthProvider.jsx';
+import PasswordField from "./PasswordField";
+import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 
 const SignUp = () => {
@@ -14,6 +17,7 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState(''); // 👈 NEW
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   // 👈 NEW: Password validation function
   const validatePasswords = () => {
@@ -40,7 +44,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://codevibe-3.onrender.com/api/auth/register", {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         username,
         Email: email,
         password,
@@ -52,7 +56,7 @@ const SignUp = () => {
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        login(response.data.user, response.data.token);
         navigate("/Dashboard");
       }
     } catch (error) {
@@ -67,11 +71,11 @@ const SignUp = () => {
     <section className='login-section'>
       <div className="login-container">
         <div className="login-image">
-          <img src={registerImage} className='registerImage' alt="Register image" />
+          <img src={registerImage} className='registerImage' alt="Register" />
         </div>
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
-            <h1>Join Us Today !</h1>
+            <h1>Join Us Today!</h1>
 
             <label>USERNAME:</label>
             <input
@@ -105,16 +109,18 @@ const SignUp = () => {
               required
             />
 
-            <label>PASSWORD:</label>
-            <input
-              type="password"
+            <PasswordField
+              id="signup-password"
+              label="PASSWORD:"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              hint={(
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
+                  *Password must be at least 6 characters long
+                </p>
+              )}
             />
-            <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
-              *Password must be at least 6 characters long
-            </p>
+            
 
             {/* 👈 NEW: Confirm Password Field */}
             <label>CONFIRM PASSWORD:</label>
