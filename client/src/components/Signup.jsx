@@ -34,6 +34,7 @@ const SignUp = () => {
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
+        localStorage.setItem("userEmail", response.data.user.email || response.data.user.Email || "");
         // Optional auto login
         login(response.data.user, response.data.token);
 
