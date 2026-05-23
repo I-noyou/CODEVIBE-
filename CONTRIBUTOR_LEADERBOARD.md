@@ -57,7 +57,8 @@ Last updated: 2026-05-23
 | 41 | [@Ritika-gupta13](https://github.com/Ritika-gupta13) | 5 | 0 | 0 | 1 |
 | 42 | [@sanjam3712](https://github.com/sanjam3712) | 5 | 0 | 0 | 1 |
 | 43 | [@Soumipal56](https://github.com/Soumipal56) | 5 | 0 | 0 | 1 |
-| 44 | [@stuti-sudo-123](https://github.com/stuti-sudo-123) | 5 | 0 | 0 | 1 |
-| 45 | [@Suhani-ai-dev](https://github.com/Suhani-ai-dev) | 5 | 0 | 0 | 1 |
-| 46 | [@SupriyaShirsat05](https://github.com/SupriyaShirsat05) | 5 | 0 | 0 | 1 |
-| 47 | [@varsha-2503](https://github.com/varsha-2503) | 5 | 0 | 0 | 1 |
+| 44 | [@srisha4](https://github.com/srisha4) | 5 | 0 | 0 | 1 |
+| 45 | [@stuti-sudo-123](https://github.com/stuti-sudo-123) | 5 | 0 | 0 | 1 |
+| 46 | [@Suhani-ai-dev](https://github.com/Suhani-ai-dev) | 5 | 0 | 0 | 1 |
+| 47 | [@SupriyaShirsat05](https://github.com/SupriyaShirsat05) | 5 | 0 | 0 | 1 |
+| 48 | [@varsha-2503](https://github.com/varsha-2503) | 5 | 0 | 0 | 1 |
