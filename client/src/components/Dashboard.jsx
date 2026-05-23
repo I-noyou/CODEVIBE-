@@ -10,20 +10,21 @@ import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api.js";
 
 // ── Constants ──────────────────────────────────────────────
-const COURSES = ["HTML", "CSS", "JavaScript", "OOP", "DSA", "DBMS", "MongoDB", "Node.js", "Express.js", "React.js"];
+const COURSES = ["HTML", "CSS","C", "JavaScript", "OOP", "DSA", "DBMS", "MongoDB", "Node.js", "Express.js", "React.js"];
 const COURSE_LESSONS = {
-  HTML: 12, CSS: 14, JavaScript: 20, OOP: 10,
+  HTML: 12, CSS: 14, C: 17, JavaScript: 20, OOP: 10,
   DSA: 18, DBMS: 12, MongoDB: 10, "Node.js": 14,
   "Express.js": 10, "React.js": 16,
 };
 const COURSE_ICONS = {
-  HTML: "🌐", CSS: "🎨", JavaScript: "⚡", OOP: "💡",
+  HTML: "🌐",C: "💻", CSS: "🎨", JavaScript: "⚡", OOP: "💡",
   DSA: "🧠", DBMS: "🗄️", MongoDB: "🍃", "Node.js": "🟢",
   "Express.js": "🚂", "React.js": "⚛️",
 };
 const COURSE_ROUTES = {
   HTML: "/HtmlLesson",
   CSS: "/CssLesson",
+  C: "/CLesson",
   JavaScript: "/JsLesson",
   OOP: "/OopLesson",
   DSA: "/DsaLesson",
@@ -36,19 +37,39 @@ const COURSE_ROUTES = {
 
 // ── Helpers ────────────────────────────────────────────────
 function buildCourseData(completedLessons = [], scores = {}) {
-  // completedLessons: ["HTML-1","HTML-2","CSS-1",...]
-  // scores: Map or plain object { HTML: 85, CSS: 72 }
   const scoresObj = scores instanceof Map
     ? Object.fromEntries(scores)
     : (scores || {});
 
   return COURSES.map(name => {
     const total = COURSE_LESSONS[name];
-    // count lessons belonging to this course
-    const done = completedLessons.filter(l =>
-      l.startsWith(name + "-") || l.startsWith(name + "_")
-    ).length;
-    const score = scoresObj[name] || 0;
+    const courseLower = name.toLowerCase().replace(/\./g, "").replace(/\s/g, "");
+
+    const done = completedLessons.filter(l => {
+      const low = l.toLowerCase().replace(/\s/g, "").replace(/\./g, "");
+      return (            
+        low.startsWith(courseLower + "-lesson-") ||     // "c-lesson-1"
+        low.startsWith(courseLower + "-lesson") ||      // "html-lesson1"
+        low.startsWith(courseLower + "_lesson")         // "html_lesson1"
+      );
+    }).length;
+
+    // find score regardless of key format
+    const courseScores = Object.entries(scoresObj)
+  .filter(([key]) => {
+    const k = key.toLowerCase().replace(/\./g, "").replace(/\s/g, "");
+    return (
+      k.startsWith(courseLower + "-lesson-") ||
+      k.startsWith(courseLower + "-lesson") ||
+      k.startsWith(courseLower + "_lesson")
+    );
+  })
+  .map(([, val]) => val);
+
+  const score = courseScores.length
+    ? Math.round(courseScores.reduce((a, b) => a + b, 0) / courseScores.length)
+    : 0;
+
     return { name, done, total, score };
   });
 }
@@ -112,17 +133,12 @@ function Modal({ title, onClose, children }) {
 
 // ── Certificates Modal ─────────────────────────────────────
 function CertificatesView({ courseData, email }) {
+  const navigate = useNavigate();
   const earned = deriveCertificates(courseData);
   const locked = courseData.filter(c => !(c.done === c.total && c.score >= 80));
 
-  const handleDownload = async (courseName) => {
-    try {
-      const res = await axios.post(`${API_BASE_URL}/api/certificate`, { email, courseName });
-      // navigate to certificate page or trigger download
-      alert(`Certificate for ${courseName}: ${res.data.feedbackMessage}`);
-    } catch {
-      alert("Could not fetch certificate.");
-    }
+  const handleDownload = (courseName) => {
+  navigate(`/certificate?course=${encodeURIComponent(courseName)}&email=${encodeURIComponent(email)}`);
   };
 
   return (
@@ -211,10 +227,6 @@ function ScoresView({ courseData, onViewReport }) {
         borderRadius: 14, padding: "0.9rem 1.2rem", marginBottom: "1.2rem",
         display: "flex", gap: 24, flexWrap: "wrap",
       }}>
-        <div>
-          <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Avg Score</p>
-          <p style={{ margin: "2px 0 0", fontSize: 22, fontWeight: 800, color: "#ff4d6d" }}>{avgScore}%</p>
-        </div>
         <div>
           <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Courses Started</p>
           <p style={{ margin: "2px 0 0", fontSize: 22, fontWeight: 800, color: "#f0f0f0" }}>{attempted.length}/{COURSES.length}</p>
