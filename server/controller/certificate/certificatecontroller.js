@@ -42,12 +42,14 @@ exports.getCertificateInfo = async (req, res) => {
     const prefix = getCoursePrefix(courseName);
 
     // Use prefix-based lookup so "JavaScript" → scores["js-lesson-1"] etc.
-    const courseScores = Object.entries(progress.scores || {})
-      .filter(([lessonId]) =>
-        lessonId.toLowerCase().startsWith(prefix)
-      )
-      .map(([, val]) => Number(val))
-      .filter((val) => Number.isFinite(val));
+    const scoresObj = progress.scores instanceof Map
+      ? Object.fromEntries(progress.scores)
+      : (progress.scores?.toObject ? progress.scores.toObject() : progress.scores || {});
+
+  const courseScores = Object.entries(scoresObj)
+    .filter(([lessonId]) => lessonId.toLowerCase().startsWith(prefix))
+    .map(([, val]) => val);
+
 
      const score = courseScores.length
        ? Math.round(
