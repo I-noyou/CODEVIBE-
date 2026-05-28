@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSearch } from "../context/SearchContext.jsx";
 import RoadmapGenerator from "./RoadmapGenerator";
 import FAQ from "./FAQ";
 import Testimonials from "./testimonials";
 import EmptyState from "./EmptyState";
-import { FaBookOpen, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaBookOpen, FaHeart, FaSearch } from "react-icons/fa";
 
 // Images
 import htmlLogo from '../assets/htmlLogo.png';
@@ -23,10 +22,11 @@ const Courses = () => {
   const [search, setSearch] = useState('');
   const [user, setUser] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
-const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [animatingId, setAnimatingId] = useState(null);
   const [showWishlistOnly, setShowWishlistOnly] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
@@ -112,6 +112,7 @@ const [wishlist, setWishlist] = useState([]);
         </div>
       )}
 
+      {/* Header Section */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -149,6 +150,41 @@ const [wishlist, setWishlist] = useState([]);
         )}
       </div>
 
+      {/* Live Search Bar */}
+      <div className="search-container">
+        <div style={{ position: "relative", width: "100%", maxWidth: "620px", margin: "0 auto 32px auto" }}>
+          <FaSearch
+            style={{
+              position: "absolute",
+              left: "1.2rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "rgba(255, 77, 109, 0.6)",
+              fontSize: "1.1rem",
+              pointerEvents: "none",
+            }}
+          />
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search for courses (HTML, React, DSA...)"
+            value={search} 
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px 20px 12px 45px",
+              borderRadius: "30px",
+              border: "1px solid rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.05)",
+              color: "white",
+              fontSize: "1rem",
+              outline: "none",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Category Filter Buttons */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
